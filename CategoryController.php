@@ -11,10 +11,10 @@ class CategoryController {
         return $model->fetchCategory();
     }
 
-     public static function getOne(){
+    public static function getOne(int $id){
         $model = new Categories();
-        $model->getField();
-     }
+        return $model->fetchOne($id);
+    }
 
      public static function add(){
         $model = new Categories();
@@ -31,10 +31,14 @@ switch($action){
         Common::setHeaders();
         echo json_encode(CategoryController::fetch());
         break;
+    case 'fetchone':
+        Common::setHeaders();
+        $id = $_GET['id'] ?? 1;
+        echo json_encode(CategoryController::getOne($id));
+        break;
     case 'add':
         CategoryController::add();
         break;
-    case 'field':
-        CategoryController::getOne();    
+       
         
 }

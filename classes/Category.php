@@ -17,29 +17,9 @@ class  Categories
         return $this->db->select('category')
             ->query();
     }
-    function getCategory()
-    {
-        $f = new DB;
-        $f->select('user');
-        
-    }
-    function  getField(){
-        $f = new DB;
-        $f->selectOne( '' , '');
-    } 
-    function addCategory(){
-        $f = new DB;
-        $f->insert( $tableName = 'users', $values  = ['name' => '', 'age' => '']);
-    }
 
-    function updateCategory()
-    {
-        $f = new DB;
-        $f->update('users',  ['name' => 'Neem', 'age' => 28], 6);
-    }
-    function deleteCategory()
-    {
-        $f = new DB;
-        $f->delete();
+    function fetchOne(int $id ){
+        return $this->db->selectOne('category', $id )
+            ->query();
     }
 }

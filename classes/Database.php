@@ -29,19 +29,33 @@ class DB {
 
     public function query(){
         $result = mysqli_query(self::$connection, $this->query);
-        if(self::$select) {
-            while($row = mysqli_fetch_object($result)) {
-                $rows[] = $row;
-            }
-           
-            return $rows;
+
+        switch(self::$select) {
+
+            case "selectOne":
+                $rows = mysqli_fetch_object($result);
+            break;
+                
+            case "select":
+                while($row = mysqli_fetch_object($result)) {
+                    $rows[] = $row;
+                }
+            break;
+
+            default:
+                $rows = [];
+            break;
         }
         
-        return $result;
+        
+        return $rows ?? $result;
     }
     
     public function insert($tableName , $values ){//$tableName = 'users', $values  = ['name' => 'Deena', 'age' => 23]
         self::$select = false;
+
+        // print_r($values); die;
+        
       $this->query = "INSERT INTO $tableName ";
       $this->query .=  '(' ;
       $this->query .= $this->getKeys(array_keys($values)); 
@@ -50,11 +64,11 @@ class DB {
       $this->query .= '(';
       $this->query .= $this->getValues(array_values($values));
       $this->query .= ')';
-
+    //   print_r( $this->query); die;
       return self::$instance;
     }
 
-    public function update($tableName , $values  , $id )  {//$tableName = 'users', $values  = ['name' => 'Anna', 'age' => 21], $id = 2
+    public function update($tableName ,int $id, array $values )  {//$tableName = 'users', $values  = ['name' => 'Anna', 'age' => 21], $id = 2
         self::$select = false;
       $this->query = "UPDATE  $tableName SET ";
       $this->query .= $this->convertArray($values);
@@ -71,15 +85,14 @@ class DB {
     }
 
     public function select($tableName ){//$tableName = 'users'
-        self::$select = true;
+        self::$select = "select";
         $this->query = "SELECT * FROM $tableName";
         
-
         return self::$instance;
     }
 
     public function selectOne($tableName, int $id, array $values = []){//$tableName = 'users', int $id = 3 ,$values  = ['name' => 'Beena', 'age' => 23]
-        self::$select = true;
+        self::$select = "selectOne";
         
         $this->query = "SELECT " ;
          $this->query .= $this->getKeys(array_keys($values)) ? empty($values) : '*';
@@ -103,6 +116,8 @@ class DB {
         $query = null;
 
         foreach($values as $key => $value){
+            
+            
             array_key_first($values) === $key ? 
                 $query .= "'$value'" : 
                 $query .= ", '$value'";
@@ -124,6 +139,10 @@ class DB {
 
 }
 
+
+// DB::getObject()
+// ->insert('category',['name' => 'Mobile', 'slug' => 'mobile'])
+// ->query();
 /* 
 //   DB::getObject()
 //   ->select( 'about' ,['name' => 'Anna', 'content' => '21','slug'=>'hfgfg'])

@@ -28,14 +28,5 @@ class Products {
         return $this->db->selectCategoryproduct('products', $category)
             ->query();
     }
-    function addProduct(){
-        
-    }
-    function updateProduct(){
-        echo " product one";
-    }
-    function deleteProduct(){
-        echo " product ";
-        
-    }
+    
 }

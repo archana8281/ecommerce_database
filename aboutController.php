@@ -2,7 +2,7 @@
 require_once 'classes/about.php';
 require_once 'classes/common.php';
 
-class aboutController{
+class AboutController{
     private $about = null;
      
     public static function fetch(){
